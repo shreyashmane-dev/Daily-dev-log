@@ -1,0 +1,34 @@
+﻿name: Weekly Summary Automation
+
+on:
+  schedule:
+    - cron: '0 20 * * 0' # Every Sunday at 20:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-summary:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Generate Weekly Summary
+        run: |
+          python scripts/weekly_summary.py
+
+      - name: Commit and Push Summary
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add summaries/
+          git diff --staged --quiet || (git commit -m "chore: generate weekly development summary" && git push)

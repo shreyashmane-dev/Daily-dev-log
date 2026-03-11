@@ -1,0 +1,2 @@
+# No external dependencies required for core functionality.
+# Standard library used: os, glob, datetime, re, sys, timedelta
