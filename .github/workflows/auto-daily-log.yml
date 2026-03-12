@@ -1,8 +1,8 @@
-﻿name: Auto Daily Log Update
+name: Auto Daily Log Update
 
 on:
   schedule:
-    - cron: '0 18 * * *' # Daily at 18:00 UTC
+    - cron: '0 18 * * *'   # Runs daily at 18:00 UTC
   workflow_dispatch:
 
 permissions:
@@ -11,6 +11,7 @@ permissions:
 jobs:
   update-log:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -20,7 +21,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: "3.x"
 
       - name: Generate Daily Log
         run: |
@@ -28,7 +29,14 @@ jobs:
 
       - name: Commit and Push Changes
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "shreyashmane-dev"
+          git config user.email "anosvoldigoadw1@gmail.com"
+
           git add logs/
-          git diff --staged --quiet || (git commit -m "chore: update daily dev log" && git push)
+
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: update daily dev log"
+            git push origin main
+          else
+            echo "No changes to commit"
+          fi
